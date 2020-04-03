@@ -1,10 +1,10 @@
 #craps
-#craps
 import random 
 
 jogo = True
 
 valor = [0]*4
+
 
 dado1 = 0
 dado2 = 0
@@ -24,23 +24,54 @@ while jogo == True:
         dado2 = random.randint(1,6)
         fase = 'Come Out'
         #apostas em come out
+        valor_total_apostas = 0
         while continuar_aposta == True:
             print('//////////////////////////////////')
             print('Vc está na fase '+fase)
             print('Os tipos de aposta disponiveis sao:\nPass line bet(plb)\nField(f)\nAny Craps(ac)\nTwelve(t) ')
             tipo_de_aposta = input('Que tipo de aposta vc gostaria de fazer?: ')
             valor_da_aposta = int(input('Quanto vc quer apostar em '+tipo_de_aposta+'?: '))
-            if valor_da_aposta > dinheiro:
+            print('//////////////////////////////////')
+            valor_total_apostas += valor_da_aposta
+            if valor_total_apostas > dinheiro:
                 print("insira uma quantia dentro de seu orçamento para fazer uma aposta valida")
+                valor_total_apostas -= valor_da_aposta
             elif tipo_de_aposta == 'plb':
-                valor[0] = valor_da_aposta
-            elif tipo_de_aposta == 'f':
-                valor[1] = valor_da_aposta
+                if valor_da_aposta != valor[0] and valor[0] != 0:
+                    valor_total_apostas -= valor_da_aposta
+                    dinheiro += valor[0]
+                    valor[0] = 0
+                    print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')   
+                else:
+                    valor[0] = valor_da_aposta
+            elif tipo_de_aposta == 'f' :
+                if valor_da_aposta <= valor[1] and valor[1] != 0:
+                    valor_total_apostas -= valor_da_aposta
+                    dinheiro += valor[1]
+                    valor[1] = 0
+                    print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')
+                else:
+                    valor[1] = valor_da_aposta
             elif tipo_de_aposta == 'ac':
-                valor[2] = valor_da_aposta
+                if valor_da_aposta <= valor[2] and valor[2] != 0:
+                    valor_total_apostas -= valor_da_aposta
+                    dinheiro += valor[2]
+                    valor[2] = 0
+                    print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')
+                else:
+                    valor[2] = valor_da_aposta
             elif tipo_de_aposta == 't':
-                valor[3] = valor_da_aposta
-            print('Valores das apostas:\nPass line bet: {0}\nField: {1}\nAny Craps: {2}\nTwelve: {3}'.format(valor[0],valor[1],valor[2],valor[3])) 
+                if valor_da_aposta <= valor[3] and valor[3] != 0:
+                    valor_total_apostas -= valor_da_aposta
+                    dinheiro += valor[3]
+                    valor[3] = 0
+                    print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')
+                else:
+                    valor[3] = valor_da_aposta
+            else:
+                print('favor, escolher uma aposta valida')
+                valor_total_apostas -= valor_da_aposta
+            print('Dinheiro disponivel: {0}\nValores das apostas:\nPass line bet: {1}\nField: {2}\nAny Craps: {3}\nTwelve: {4}'.format(dinheiro-valor_total_apostas, valor[0],valor[1],valor[2],valor[3])) 
             print('Vc pode mudar o valor de alguma aposta ou fazer apostas em outros tipos')
             nova_aposta = input('vc gostaria de fazer isso? (s/n): ')
             if nova_aposta == 'n':
@@ -98,27 +129,56 @@ while jogo == True:
             continuar_aposta = True
             fase = 'Point'
             #aposta fase point
+            valor_total_apostas = 0
             while mudar_de_fase == False:
                 while continuar_aposta:
                     print('//////////////////////////////////')
                     print('Vc está na fase '+fase)
+                    print('total da aposta da fase Point: {0}'.format(valor_total_apostas))
                     print('Os tipos de aposta disponiveis sao:\nField(f)\nAny Craps(ac)\nTwelve(t) ')
-                    tipo_de_aposta = input('Que tipo de aposta vc gostaria de fazer?: ')
-                    valor_da_aposta = int(input('Quanto vc quer apostar em '+tipo_de_aposta+'?: '))
-                    if valor_da_aposta > dinheiro:
-                        print("insira uma quantia dentro de seu orçamento para fazer uma aposta valida")
-                    elif tipo_de_aposta == 'f':
-                        valor[1] = valor_da_aposta
-                    elif tipo_de_aposta == 'ac':
-                        valor[2] = valor_da_aposta
-                    elif tipo_de_aposta == 't':
-                        valor[3] = valor_da_aposta
-                    print('Valores das apostas:\nPass line bet: {0}\nField: {1}\nAny Craps: {2}\nTwelve: {3}'.format(valor[0],valor[1],valor[2],valor[3])) 
-                    print('Vc pode mudar o valor de alguma aposta ou fazer apostas em outros tipos')
-                    nova_aposta = input('vc gostaria de fazer isso? (s/n): ')
-                    if nova_aposta == 'n':
+                    tipo_de_aposta = input('Que tipo de aposta vc gostaria de fazer? (caso nao queira apostar, digite n): ')
+                    if tipo_de_aposta == 'n':
                         continuar_aposta = False
-                        dinheiro = dinheiro-valor[0]-valor[1]-valor[2]-valor[3]
+                    else:
+                        valor_da_aposta = int(input('Quanto vc quer apostar em '+tipo_de_aposta+'?: '))
+                        print('total da aposta da fase Point: {0}'.format(valor_total_apostas))
+                        print('valor da aposta escolhida: {0}'.format(valor_da_aposta))
+                        valor_total_apostas += valor_da_aposta
+                        print('aposta total: {0}'.format(valor_total_apostas))
+                        print('//////////////////////////////////')
+                        if valor_total_apostas > dinheiro:
+                            print("insira uma quantia dentro de seu orçamento para fazer uma aposta valida")
+                            valor_total_apostas -= valor_da_aposta
+                        elif tipo_de_aposta == 'f':
+                            if valor_da_aposta <= valor[1] and valor[1] != 0:
+                                valor_total_apostas -= valor_da_aposta
+                                dinheiro += valor[1]
+                                valor[1] = 0
+                                print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')
+                            else:
+                                valor[1] = valor_da_aposta
+                        elif tipo_de_aposta == 'ac':
+                            if valor_da_aposta <= valor[2] and valor[2] != 0:
+                                valor_total_apostas -= valor_da_aposta
+                                dinheiro += valor[2]
+                                valor[2] = 0
+                                print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')
+                            else:
+                                valor[2] = valor_da_aposta
+                        elif tipo_de_aposta == 't':
+                            if valor_da_aposta <= valor[3] and valor[3] != 0:
+                                valor_total_apostas -= valor_da_aposta
+                                dinheiro += valor[3]
+                                valor[3] = 0
+                                print('A aposta em '+tipo_de_aposta+' foi zerada, por favor preencha o valor novamente')
+                            else:
+                                valor[3] = valor_da_aposta
+                        print('Dinheiro disponivel: {0}\nValores das apostas:\nPass line bet: {1}\nField: {2}\nAny Craps: {3}\nTwelve: {4}'.format(dinheiro-valor_total_apostas, valor[0],valor[1],valor[2],valor[3])) 
+                        print('Vc pode mudar o valor de alguma aposta ou fazer apostas em outros tipos')
+                        nova_aposta = input('vc gostaria de fazer isso? (s/n): ')
+                        if nova_aposta == 'n':
+                            continuar_aposta = False
+                            dinheiro = dinheiro-valor[1]-valor[2]-valor[3]
                 #fase point
                 dado1 = random.randint(1,6)
                 dado2 = random.randint(1,6)
@@ -141,7 +201,7 @@ while jogo == True:
                         dinheiro = dinheiro+valor[1]*2
                     valor[1] = 0
                 #anycraps
-                if valor[2] > 0:
+                elif valor[2] > 0:
                     if soma_dos_dados == 2 or soma_dos_dados == 3 or soma_dos_dados == 12 :
                         print('ganhou {0} em anycraps'.format(valor[2]*7))
                         dinheiro = dinheiro+valor[2]*8
@@ -149,7 +209,7 @@ while jogo == True:
                         print('perdeu {0} em anycraps'.format(valor[2]))
                     valor[2] = 0
                 #twelve
-                if valor[3] > 0:
+                elif valor[3] > 0:
                     if soma_dos_dados == 12:
                         print('ganhou {0} em twelve'.format(valor[3]*30))
                         dinheiro = dinheiro+valor[3]*31
@@ -157,7 +217,7 @@ while jogo == True:
                         print('perdeu {0} em twelve'.format(valor[3]))
                     valor[3] = 0
                 #pass line bet
-                if soma_dos_dados == sdado_point:
+                elif soma_dos_dados == sdado_point:
                     print('ganhou {0} em pass line bet'.format(valor[0]))
                     dinheiro = dinheiro+valor[0]*2
                     valor[0] = 0
@@ -171,6 +231,3 @@ while jogo == True:
     if dinheiro <= 0:
         jogo = False
 print('obrigado por jogar! Volte sempre.')
-
-
-
